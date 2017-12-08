@@ -1,0 +1,25 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+apply from: 'http://maven.mjtown.cn/maven-java.gradle'
+mavenConf {
+  groupId "name.zeno"
+  artifactId "wechat-compiler"
+  version "0.0.1"
+
+  repositoryUrl "file:///Users/zenochan/.m2/repository"
+//  repositoryUrl "scp://root@mjtown.cn/root/nginx/maven"
+}
+confMaven()
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile "name.zeno:wechat-annotation:0.0.1"
+  compile 'com.squareup:javapoet:1.9.0'
+  compile 'com.google.android:android:4.1.1.4'
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+  compile "com.android.support:support-annotations:27.0.2"
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"

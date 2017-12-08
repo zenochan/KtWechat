@@ -1,0 +1,46 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+apply from: 'http://maven.mjtown.cn/maven.gradle'
+mavenConf {
+  groupId "name.zeno"
+  artifactId "wechat"
+  version "0.0.1"
+
+  repositoryUrl "file:///Users/zenochan/.m2/repository"
+//  repositoryUrl "scp://root@mjtown.cn/root/nginx/maven"
+}
+confMaven()
+
+android {
+  compileSdkVersion 27
+
+
+  defaultConfig {
+    minSdkVersion 15
+    targetSdkVersion 27
+    versionCode 1
+    versionName mavenConf.version
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+
+}
+
+dependencies {
+  provided 'com.android.support:appcompat-v7:27.0.2'
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+  api "name.zeno:wechat-annotation:0.0.1"
+  api "io.reactivex.rxjava2:rxjava:2.1.7"
+  api "io.reactivex.rxjava2:rxandroid:2.0.1"
+  api 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:1.4.0'
+}

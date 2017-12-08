@@ -1,0 +1,16 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+apply from: 'http://maven.mjtown.cn/maven-java.gradle'
+mavenConf {
+  groupId "name.zeno"
+  artifactId "wechat-annotation"
+  version "0.0.1"
+
+  repositoryUrl "file:///Users/zenochan/.m2/repository"
+//  repositoryUrl "scp://root@mjtown.cn/root/nginx/maven"
+}
+confMaven()
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
