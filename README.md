@@ -8,7 +8,7 @@
 
 ```groovy
 maven { url "http://maven.mjtown.cn/"}
-implementation "name.zeno:wechat:0.0.1"
+implementation "name.zeno:wechat:0.0.2"
 kapt "name.zeno:wechat-compiler:0.0.1"
 
 ```
@@ -17,6 +17,9 @@ kapt "name.zeno:wechat-compiler:0.0.1"
 @Wechat("wechat app id","pkgName")
 class MyApp{}
 ```
+
+- Context.isWxAppInstalled:     微信是否安装
+- Context.registerAppToWx:      注册应用到微信
 
 - AppCompatActivity.wxPay
 - AppcompatActivity.wxAuth

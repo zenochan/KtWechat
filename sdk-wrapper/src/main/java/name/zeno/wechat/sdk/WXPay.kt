@@ -3,11 +3,9 @@ package name.zeno.wechat.sdk
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
-
 import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelpay.PayReq
-
-import io.reactivex.Observable
+import io.reactivex.Single
 
 /**
  * 发起支付
@@ -25,7 +23,7 @@ class WXPay(
     var timeStamp: String? = null,
     var sign: String? = null
 ) : Req(), Parcelable {
-  override fun build(context: Context): Observable<BaseReq> {
+  override fun build(context: Context): Single<BaseReq> {
     val payReq = PayReq()
     payReq.appId = appId
     payReq.partnerId = partnerId
@@ -34,7 +32,7 @@ class WXPay(
     payReq.nonceStr = nonceStr
     payReq.timeStamp = timeStamp
     payReq.sign = sign
-    return Observable.just(payReq)
+    return Single.just(payReq)
   }
 
   constructor(source: Parcel) : this(

@@ -7,8 +7,8 @@ mavenConf {
   artifactId "wechat-annotation"
   version "0.0.1"
 
-  repositoryUrl "file:///Users/zenochan/.m2/repository"
-//  repositoryUrl "scp://root@mjtown.cn/root/nginx/maven"
+//  repositoryUrl "file:///Users/zenochan/.m2/repository"
+  repositoryUrl "scp://root@mjtown.cn/root/nginx/maven"
 }
 confMaven()
 

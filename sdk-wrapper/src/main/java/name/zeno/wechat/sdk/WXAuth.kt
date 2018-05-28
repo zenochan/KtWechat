@@ -3,11 +3,9 @@ package name.zeno.wechat.sdk
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
-
 import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelmsg.SendAuth
-
-import io.reactivex.Observable
+import io.reactivex.Single
 
 /**
  * 授权登陆
@@ -20,11 +18,11 @@ class WXAuth(
     val scope: String = "snsapi_userinfo",
     val state: String = "wx_sdk_" + System.currentTimeMillis()
 ) : Req(), Parcelable {
-  override fun build(context: Context): Observable<BaseReq> {
+  override fun build(context: Context): Single<BaseReq> {
     val req = SendAuth.Req()
     req.scope = scope
     req.state = state
-    return Observable.just(req)
+    return Single.just(req)
   }
 
   constructor(source: Parcel) : this(

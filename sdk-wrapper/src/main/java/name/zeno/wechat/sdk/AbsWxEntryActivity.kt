@@ -1,6 +1,5 @@
 package name.zeno.wechat.sdk
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -14,18 +13,12 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import name.zeno.wechat.sdk.AbsWxEntryActivity.Companion.isWxAppInstalled
-import name.zeno.wechat.sdk.AbsWxEntryActivity.Companion.register
 
 /**
- * * [register] 注册 App 到微信
- * * [isWxAppInstalled] 是否安装微信
- *
  * @author 陈治谋 (513500085@qq.com)
- * @since 2017/4/27
+ * @since  2017/4/27
  */
 abstract class AbsWxEntryActivity : AppCompatActivity(), IWXAPIEventHandler {
-
   private lateinit var api: IWXAPI
   private var disposable: Disposable? = null
 
@@ -59,13 +52,12 @@ abstract class AbsWxEntryActivity : AppCompatActivity(), IWXAPIEventHandler {
     req.build(this)
         .observeOn(Schedulers.io())
         .subscribeOn(AndroidSchedulers.mainThread())
-        .subscribe({
-          api.sendReq(it)
+        .doOnSubscribe { disposable = it }
+        .subscribe({ baseReq ->
+          api.sendReq(baseReq)
           finishIfNullRes = true
         }, {
           finish()
-        }, { /*on completed*/ }, {
-          disposable = it
         })
   }
 
@@ -101,7 +93,7 @@ abstract class AbsWxEntryActivity : AppCompatActivity(), IWXAPIEventHandler {
           }
           BaseResp.ErrCode.ERR_USER_CANCEL -> "取消登录"
           BaseResp.ErrCode.ERR_AUTH_DENIED -> "拒绝登录"
-          else -> null
+          else -> "登录失败"
         }
 
         ConstantsAPI.COMMAND_SENDMESSAGE_TO_WX -> when (errCode) {      //发送消息到微信（如 分享）
@@ -135,18 +127,4 @@ abstract class AbsWxEntryActivity : AppCompatActivity(), IWXAPIEventHandler {
   override fun onResp(baseResp: BaseResp) {
     this.resp = baseResp
   }
-
-  companion object {
-    /** 微信是否已安装  */
-    fun isWxAppInstalled(context: Context): Boolean {
-      return WXAPIFactory.createWXAPI(context, null).isWXAppInstalled
-    }
-
-    /** 注册 App 到微信  */
-    fun register(context: Context, appId: String): Boolean {
-      val api = WXAPIFactory.createWXAPI(context, appId, true)
-      return api.isWXAppInstalled && api.registerApp(appId)
-    }
-  }
-
 }

@@ -8,8 +8,8 @@ import android.os.Parcelable
 import android.support.annotation.DrawableRes
 import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX
+import com.tencent.mm.opensdk.modelmsg.WXImageObject
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage
-import com.tencent.mm.opensdk.modelmsg.WXWebpageObject
 import io.reactivex.Single
 
 /**
@@ -21,15 +21,12 @@ import io.reactivex.Single
  * @since 2017/4/27
  */
 @Suppress("unused", "MemberVisibilityCanPrivate")
-data class WXUrlMsg(
-    var webpageUrl: String? = null,
-    var title: String? = null,
-    var description: String? = null,
+data class WXImgMsg(
     var thumbImageUrl: String? = null,
     var thumbImage: Bitmap? = null,
     @field:WXScene
     @param:WXScene
-    var scene: Int = 0
+    var scene: Int = WXScene.SESSION
 ) : Req(), Parcelable {
   override fun build(context: Context): Single<BaseReq> {
     return Single.create<Bitmap>(source@{ emitter ->
@@ -50,18 +47,20 @@ data class WXUrlMsg(
       val bitmap = BitmapFactory.decodeResource(context.resources, drawableRes)
       emitter.onSuccess(bitmap)
     }).map { bitmap ->
-      // 对大图片处理
-      if (bitmap.width <= 256 && bitmap.height <= 256)
-        bitmap
-      else ZBitmap.zoom(bitmap, 256.0, 256.0)
-    }.map { bitmap ->
       // 构建 req
-      val webpage = WXWebpageObject()
-      webpage.webpageUrl = webpageUrl
+      val webpage = WXImageObject(bitmap)
       val msg = WXMediaMessage(webpage)
-      msg.title = title
-      msg.description = description
       msg.setThumbImage(bitmap)
+
+      // 设置缩略图
+      if (bitmap.byteCount < 128000) {
+        msg.setThumbImage(bitmap)
+      } else {
+        val rate = 128000.0 / bitmap.byteCount
+        val result = ZBitmap.zoom(bitmap, bitmap.width * rate, bitmap.height * rate)
+        bitmap.recycle()
+        msg.setThumbImage(result)
+      }
 
       val req = SendMessageToWX.Req()
       req.transaction = "Zeno" //transaction 字段用于唯一标识一个请求
@@ -73,9 +72,6 @@ data class WXUrlMsg(
 
   constructor(source: Parcel) : this(
       source.readString(),
-      source.readString(),
-      source.readString(),
-      source.readString(),
       source.readParcelable<Bitmap>(Bitmap::class.java.classLoader),
       source.readInt()
   )
@@ -83,9 +79,6 @@ data class WXUrlMsg(
   override fun describeContents() = 0
 
   override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-    writeString(webpageUrl)
-    writeString(title)
-    writeString(description)
     writeString(thumbImageUrl)
     writeParcelable(thumbImage, 0)
     writeInt(scene)
@@ -96,9 +89,9 @@ data class WXUrlMsg(
     @DrawableRes
     var drawableRes: Int = android.R.drawable.ic_menu_share
     @JvmField
-    val CREATOR: Parcelable.Creator<WXUrlMsg> = object : Parcelable.Creator<WXUrlMsg> {
-      override fun createFromParcel(source: Parcel): WXUrlMsg = WXUrlMsg(source)
-      override fun newArray(size: Int): Array<WXUrlMsg?> = arrayOfNulls(size)
+    val CREATOR: Parcelable.Creator<WXImgMsg> = object : Parcelable.Creator<WXImgMsg> {
+      override fun createFromParcel(source: Parcel): WXImgMsg = WXImgMsg(source)
+      override fun newArray(size: Int): Array<WXImgMsg?> = arrayOfNulls(size)
     }
   }
 }

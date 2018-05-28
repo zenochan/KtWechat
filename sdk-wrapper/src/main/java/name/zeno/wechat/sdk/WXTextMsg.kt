@@ -3,13 +3,11 @@ package name.zeno.wechat.sdk
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
-
 import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage
 import com.tencent.mm.opensdk.modelmsg.WXTextObject
-
-import io.reactivex.Observable
+import io.reactivex.Single
 
 /**
  * 发送文本消息
@@ -23,7 +21,7 @@ data class WXTextMsg(
     @field:WXScene
     var scene: Int = WXScene.SESSION
 ) : Req(), Parcelable {
-  override fun build(context: Context): Observable<BaseReq> {
+  override fun build(context: Context): Single<BaseReq> {
     val textObject = WXTextObject(text)
     val msg = WXMediaMessage(textObject)
     msg.description = text
@@ -33,7 +31,7 @@ data class WXTextMsg(
     req.message = msg
     req.scene = scene
 
-    return Observable.just(req)
+    return Single.just(req)
   }
 
   constructor(source: Parcel) : this(
