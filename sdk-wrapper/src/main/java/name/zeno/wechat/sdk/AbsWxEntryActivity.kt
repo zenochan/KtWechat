@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import com.tencent.mm.opensdk.constants.ConstantsAPI
 import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelbase.BaseResp
+import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram
 import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
@@ -102,6 +103,11 @@ abstract class AbsWxEntryActivity : AppCompatActivity(), IWXAPIEventHandler {
           else -> "分享失败"
         }
 
+        ConstantsAPI.COMMAND_LAUNCH_WX_MINIPROGRAM -> {
+          // 拉起小升序回调
+          // 对应JsApi navigateBackApplication中的extraData字段数据
+          (resp as WXLaunchMiniProgram.Resp).extMsg
+        }
         else -> null
       }
       okAndFinish(respWrapper)

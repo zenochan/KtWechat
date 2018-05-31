@@ -48,9 +48,25 @@ internal fun AppCompatActivity.wxSend(data: Req, next: (Resp) -> Unit) {
   }
 }
 
+/** 微信授权 */
 fun Fragment.wxAuth(data: WXAuth, next: (Resp) -> Unit) = wxSend(data, next)
+
+/** 微信分享 */
 fun Fragment.wxShare(data: WXTextMsg, next: (Resp) -> Unit) = wxSend(data, next)
+
+/** 微信分享 */
 fun Fragment.wxShare(data: WXUrlMsg, next: (Resp) -> Unit) = wxSend(data, next)
+
+/** 微信分享小程序 */
+fun Fragment.wxShare(data: WXMiniProgramMsg, next: (Resp) -> Unit) = wxSend(data, next)
+
+/** 微信分享图片 */
+fun Fragment.wxShare(data: WXImgMsg, next: (Resp) -> Unit) = wxSend(data, next)
+
+/** 打开小程序 */
+fun Fragment.launchMiniProgram(data: WXMiniProgram, next: (Resp) -> Unit) = wxSend(data, next)
+
+/** 微信消息 */
 internal fun Fragment.wxSend(data: Req, next: (Resp) -> Unit) {
   LifecycleFragment.with(this).navForResult(activity.wxEntry, data) { _, intentData ->
     if (intentData != null) next(intentData.getParcelableExtra(KEY))

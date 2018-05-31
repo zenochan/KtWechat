@@ -11,7 +11,7 @@ import com.tencent.mm.opensdk.modelmsg.SendMessageToWX
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage
 import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject
 import io.reactivex.Single
-import name.zeno.wechat.sdk.WxMiniProgramMsg.Companion.drawableRes
+import name.zeno.wechat.sdk.WXMiniProgramMsg.Companion.drawableRes
 
 /**
  * 发送小程序消息
@@ -29,8 +29,7 @@ import name.zeno.wechat.sdk.WxMiniProgramMsg.Companion.drawableRes
  * @author 陈治谋 (513500085@qq.com)
  * @since 2017/4/27
  */
-@Suppress("unused", "MemberVisibilityCanPrivate")
-data class WxMiniProgramMsg(
+data class WXMiniProgramMsg(
     var webpageUrl: String? = null,
     @field:MiniProgramType
     @param:MiniProgramType
@@ -111,9 +110,9 @@ data class WxMiniProgramMsg(
     var drawableRes: Int = android.R.drawable.ic_menu_share
 
     @JvmField
-    val CREATOR: Parcelable.Creator<WxMiniProgramMsg> = object : Parcelable.Creator<WxMiniProgramMsg> {
-      override fun createFromParcel(source: Parcel): WxMiniProgramMsg = WxMiniProgramMsg(source)
-      override fun newArray(size: Int): Array<WxMiniProgramMsg?> = arrayOfNulls(size)
+    val CREATOR: Parcelable.Creator<WXMiniProgramMsg> = object : Parcelable.Creator<WXMiniProgramMsg> {
+      override fun createFromParcel(source: Parcel): WXMiniProgramMsg = WXMiniProgramMsg(source)
+      override fun newArray(size: Int): Array<WXMiniProgramMsg?> = arrayOfNulls(size)
     }
   }
 
